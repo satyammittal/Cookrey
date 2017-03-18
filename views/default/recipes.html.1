@@ -1,0 +1,41 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static','css/main/recipies.css')}}" />
+<h1>List all recipes</h1>
+<table class="f">
+<thead class="head">
+    <td>Recipe Name</td>
+    <td>Image</td>
+    <td>Contributor</td>
+    <td>Origin</td>
+    <td>Time</td>
+    <td>Number of likes</td>
+    <td>LIKE</td>
+</thead>
+<body>
+    <form><input type="hidden" id="id" name="id" value="" /></form>
+{{for recipe in records:}}
+<tr>
+<td class="g" >{{=A(recipe.title,_href=URL('show?id=%s'%recipe.id))}}</td>
+    <td><img style="width:300px; height:150px;"
+src="{{=URL('download', args=[recipe.pictures])}}" /></td>
+    <td><div class="o">{{=db.auth_user[recipe.user_ref].first_name}}</div>  </td>
+    <td>{{=recipe.Country}}</td>
+<td> {{=recipe.creationTime}}</td>
+    <td id="p1"><span id="recipe{{=recipe.id}}">{{=recipe.nolike}}</span></td>
+<td>  
+    Votes=
+[<button onclick="jQuery('id').val('{{=recipe.id}}');
+    ajax('like', ['id'], 'recipe{{=recipe.id}}');">vote up<img src="{{=URL('static','images/like.png')}}" width="80" height="96"</img></button>]</td></tr></td>
+</tr>
+<tr><td>
+     <form><input type="hidden" id="id" name="id" value="" /></form>
+    Votes=<span id="recipe{{=recipe.id}}">{{=recipe.nolike}}</span>
+[<button onclick="jQuery('id').val('{{=recipe.id}}');
+    ajax('like', ['id'], 'recipe{{=recipe.id}}');">vote up</button>]</td></tr>
+{{pass}}
+<a href="{{=URL('recipes?id=%s'%k)}}">NEXT</a>
+&nbsp&nbsp
+<a href="{{=URL('recipes?id=%s'%back)}}">BACK</a>
+    </body>
+</table>
+{{=A('create new recipe',_href=URL('new_recipe'))}}

@@ -1,0 +1,83 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" type="text/css" href="{{=URL('static','main/show.css')}}" />
+ <form><input type="hidden" id="id" name="id" value="" /></form>
+<div>
+ 
+<button onclick="document.getElementById('id').value={{=recipe.id}};
+    ajax('like', ['id'], 'recipe{{=recipe.id}}')";><img src="{{=URL('static','images/like.png')}}" float="center" width="20" height="26"</img></button>
+    Number of likes:
+  <span id="recipe{{=recipe.id}}">{{=recipe.nolike}}</span>
+    <div class="a">Date of Upload {{=recipe.creationTime}}</div>
+    <center>
+  <h1 class="recipeSource">{{=recipe.title}}</h1>
+</center>
+        
+</div>
+<input id="editRecipeButton" type="button" class="btn" value="Edit" />
+<!--<input id="uploadPictureButton" type="button" class="btn" value="Upload Picture" />-->
+<div>
+     <div class="recipeImageHolder">
+    <img class="recipeImage scalable centered"  src="{{=URL('download',args=[recipe.pictures])}}"></img>
+    </div>
+<div class="recipeNotes" >
+    <h3>Directions</h3>
+    <ol>
+      {{for direction in recipe.directions:}}
+      <li>{{=direction}}</li>
+      {{pass}}
+    </ol>
+  </div>
+  <div class="recipeIngredients" background-color= aquamarine; >
+    <h3>Ingredients</h3>
+    <ul>
+      {{for ingredient in recipe.ingredients:}}
+      <li>{{=ingredient}}</li>
+      {{pass}}
+    </ul>
+  </div>
+<div class="recipeDirections">
+    <h3>Notes: </h3>
+    <p >
+       It is of {{=recipe.type}} type<br/>
+      {{=recipe.notes}}
+       <br/>
+        Uploaded by {{=db.auth_user[recipe.user_ref].first_name}}
+    </p>
+  </div>
+</div>
+<div id="editRecipe">
+  <input type="button" class="btn" id="removeAllPicture" value="Remove All Pictures" onclick="$.ajax('{{=URL('ajax','removeAllPictures', args=[recipe.id])}}').done(function(){window.location.href='';});"/>
+  <div id="editRecipeClose">X</div>
+  <center>
+    <h1>Edit Recipe</h1>
+    {{=recipeForm}}
+  </center>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".scalable").each(function(){
+      if($(this).parent().height()>$(this).parent().width()){
+        $(this).css({"width": "100%"});
+      }else{
+        $(this).css({"height": "100%"});
+      }
+    });
+    $("#Picture_recipe_ref").val("{{=recipe.id}}");
+    $("#editRecipeButton").click(function(){
+      $("#editRecipe").show();
+    });
+    $("#editRecipeClose").click(function(){
+      $("#editRecipe").hide();
+    });
+    $("#uploadPictureButton").click(function(){
+      $("#uploadPicture").show();
+    });
+    $("#uploadPictureClose").click(function(){
+      $("#uploadPicture").hide();
+    });
+    $(document).keydown(function(e){
+      if(e.which==27) $("#editRecipe").hide();
+    });
+  });
+</script>

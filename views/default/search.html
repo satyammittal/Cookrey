@@ -1,0 +1,21 @@
+{{extend 'layout.html'}}
+<style>.i{float:left;
+    display:inline-block;}
+    .f{
+        float:right;
+        display:inline-block;
+        margin-right:300px
+    }
+</style>
+<img src={{=URL('static','images/veg.gif')}} height=150px width=100%/>
+<h2>
+    {{=FOOD}}
+</h2>
+<div class=f>
+    <h1>
+        TYPE VEG OR NON-VEG
+    </h1>
+{{=form1}}
+press enter
+</div>
+<img src={{=URL('static','images/p.jpg')}} height=300px width=30%/  class=i/>

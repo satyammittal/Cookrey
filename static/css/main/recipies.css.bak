@@ -1,0 +1,24 @@
+td,th
+        {
+            padding: 30px;
+            text-align:left;
+            padding-right:10px;
+            margin-left:20px
+            margin-right:20px
+        }
+    theader
+    {
+        text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
+        box-shadow: 10px 10px;
+        font-size:25px;
+    }
+    .g
+    {
+         font-size:20px;
+            color:blue;
+    }
+    .o
+    {
+        font-size:15px;
+        color:blue;
+    }

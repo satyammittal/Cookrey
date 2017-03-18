@@ -1,0 +1,121 @@
+.recipeImageHolder{
+  float: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: calc( 50% - 10px );
+  height: 300px;
+}
+.recipeImage{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.a{
+     
+     size:10px;
+}
+p{
+margin: 10px 50px 10px 50px;
+}
+.recipeNotes{
+  float: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  width: calc( 50% - 10px );
+  height: 300px;
+  background-color:bisque;
+}
+
+.recipeIngredients{
+  background-color: lightblue;
+  float: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 5px;
+  width: calc( 50% - 10px );
+  
+}
+
+.recipeDirections{
+  background-color: aquamarine;
+  float: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 5px;
+  width: calc( 50% - 10px );
+}
+
+a{
+  color: white;
+}
+a:hover{
+  color: gray;
+  text-decoration: none;
+}
+h3{
+  text-align: center;
+}
+
+#editRecipeButton{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+#editRecipe{
+  display: none;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,.9);
+  overflow: auto;
+}
+#editRecipeClose{
+  position: fixed;
+  top: 10px;
+  right: 30px;
+  cursor: pointer;
+}
+#editRecipeClose:hover{
+  color: red;
+}
+#removeAllPicture{
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
+
+#uploadPictureButton{
+  position: absolute;
+  top: 10px;
+  right: 70px;
+}
+#uploadPicture{
+  display: none;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  color: white;
+  background-color: rgba(0,0,0,.9);
+  overflow: auto;
+}
+#uploadPictureClose{
+  position: fixed;
+  top: 10px;
+  right: 30px;
+  cursor: pointer;
+}
+#uploadPictureClose:hover{
+  color: red;
+}
+#uploadPictureContainer{
+  position: relative;
+  top: 200px;
+}
+#Picture_recipe_ref__row{
+  display: none;
+}

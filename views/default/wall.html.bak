@@ -1,0 +1,51 @@
+{{extend 'layout.html'}}
+<style>
+    table,td,th
+        {
+            padding: 30px;
+            text-align:left;
+            padding-right:40px;
+            margin-left:30px
+            margin-right:20px
+        }
+    .head
+    {
+        font-size:25px;
+    }
+    .g
+    {
+         font-size:20px;
+    }
+    .o
+    {
+        font-size:15px;
+        color:blue;
+    }
+     thead {text-shadow: 0 0 3px #EEDD00, 0 0 5px #0000FF;
+        box-shadow: 10px 10px grey;
+    font-size:25px;}
+</style>
+<h1>Your uploaded recipes</h1>
+<table class="f" >
+<thead class="head">
+    <td>Recipe Name</td>
+    <td>Image</td>
+     <td>Type</td>
+    <td>Origin</td>
+    <td>Time</td>
+</thead>
+<body>
+{{for recipe in records:}}
+<tr>
+<td class="g" >{{=A(recipe.title,_href=URL('show?id=%s'%auth.user_id))}}</td>
+     <td><img style="width:300px; height:150px;"
+src="{{=URL('download', args=[recipe.pictures])}}" /></td>
+    <td>{{=recipe.type}}</td>
+    <td>{{=recipe.Country}}</td>
+<td> {{=recipe.creationTime}}</td>
+</tr>
+{{pass}}
+    </body>
+</table>
+
+{{=A('create new recipe',_href=URL('home'))}}

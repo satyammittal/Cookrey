@@ -1,0 +1,11 @@
+SQLFORM(table, record = None,
+deletable = False, linkto = None,
+upload = None, fields = None, labels = None,
+col3 = {}, submit_button = 'Submit',
+delete_label = 'Check to delete:',
+showid = True, readonly = False,
+comments = True, keepopts = [],
+ignore_rw = False, record_id = None,
+formstyle = 'table3cols',
+buttons = ['submit'], separator = ': ',
+**attributes)

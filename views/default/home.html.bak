@@ -1,0 +1,10 @@
+{{extend 'layout.html'}}
+<style>body { 
+    background: url("{{=URL('static','images/gh1.gif')}}");
+    background-repeat: no-repeat;
+    background-size: 800px 600px;
+    background-attachment: fixed;
+    background-position: right; 
+}</style>
+<h1>Create your own receipe</h1>
+{{=form}}

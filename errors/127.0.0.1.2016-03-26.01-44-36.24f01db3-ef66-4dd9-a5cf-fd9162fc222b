@@ -1,0 +1,638 @@
+(dp1
+S'output'
+p2
+S"<class 'pysqlite2.dbapi2.OperationalError'> no such column: auth_user.id"
+p3
+sS'layer'
+p4
+S'/home/satyam/itws/web2py/applications/COOKRE/controllers/default.py'
+p5
+sS'code'
+p6
+S'def index():\n    if auth.user: redirect(URL(\'home\'))\n    return locals()\n\ndef user():\n    return dict(form=auth())\n\ndef download():\n    return response.download(request,db)\n\ndef call():\n    session.forget()\n    return service()\n\n# our home page, will show our posts and posts by friends\n@auth.requires_login()\ndef home():\n    form=SQLFORM(db.recipe,fields=[\'title\',\n                               \'ingredients\',\'directions\',\'pictures\'])\n    username=db.auth_user\n    if form.accepts(request,session):\n        redirect(URL(\'recipes\'))\n    return dict(form=form,username=username)\n\n# our wall, will show our profile and our own posts\n@auth.requires_login()\ndef recipes():\n    records=db(db.recipe.category==request.vars.category)\\\n            .select(orderby=db.recipe.title)\n    form=SQLFORM(db.recipe,fields=[\'category\'])\n    return dict(form=form,records=records)\n@auth.requires_login()\ndef show():\n    id=request.vars.id\n    recipes=db(db.recipe.id==id).select()\n    if not len(recipes): redirect(URL(\'recipes\'))\n    return dict(recipe=recipes[0])\n\n\n# a page for searching friends and requesting friendship\n@auth.requires_login()\ndef search():\n    form = SQLFORM.factory(Field(\'name\',requires=IS_NOT_EMPTY()))\n    if form.accepts(request):\n        tokens = form.vars.name.split()\n        query = reduce(lambda a,b:a&b,\n                       [User.first_name.contains(k)|User.last_name.contains(k) \\\n                            for k in tokens])\n        people = db(query).select(orderby=alphabetical)\n    else:\n        people = []\n    return locals()\n\n# a page for accepting and denying friendship requests\n@auth.requires_login()\ndef friends():\n    friends = db(User.id==Link.source)(Link.target==me).select(orderby=alphabetical)\n    requests = db(User.id==Link.target)(Link.source==me).select(orderby=alphabetical)\n    return locals()\n\n# this is the Ajax callback\n@auth.requires_login()\ndef friendship():\n    """AJAX callback!"""\n    if request.env.request_method!=\'POST\': raise HTTP(400)\n    if a0==\'request\' and not Link(source=a1,target=me):\n        # insert a new friendship request\n        Link.insert(source=me,target=a1)\n    elif a0==\'accept\':\n        # accept an existing friendship request\n        db(Link.target==me)(Link.source==a1).update(accepted=True)\n        if not db(Link.source==me)(Link.target==a1).count():\n            Link.insert(source=me,target=a1)\n    elif a0==\'deny\':\n        # deny an existing friendship request\n        db(Link.target==me)(Link.source==a1).delete()\n    elif a0==\'remove\':\n        # delete a previous friendship request\n        db(Link.source==me)(Link.target==a1).delete()\n\nresponse._vars=response._caller(home)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__module__'
+p12
+S"'pysqlite2.dbapi2'"
+p13
+sS'__getslice__'
+p14
+S"<method-wrapper '__getslice__' of OperationalError object>"
+p15
+sS'__str__'
+p16
+S"<method-wrapper '__str__' of OperationalError object>"
+p17
+sS'__reduce__'
+p18
+S'<built-in method __reduce__ of OperationalError object>'
+p19
+sS'__dict__'
+p20
+S'{}'
+p21
+sS'__sizeof__'
+p22
+S'<built-in method __sizeof__ of OperationalError object>'
+p23
+sS'__weakref__'
+p24
+S'None'
+p25
+sS'__init__'
+p26
+S"<method-wrapper '__init__' of OperationalError object>"
+p27
+sS'__setattr__'
+p28
+S"<method-wrapper '__setattr__' of OperationalError object>"
+p29
+sS'__reduce_ex__'
+p30
+S'<built-in method __reduce_ex__ of OperationalError object>'
+p31
+sS'__new__'
+p32
+S'<built-in method __new__ of type object>'
+p33
+sS'__format__'
+p34
+S'<built-in method __format__ of OperationalError object>'
+p35
+sS'__class__'
+p36
+S"<class 'pysqlite2.dbapi2.OperationalError'>"
+p37
+sS'__doc__'
+p38
+S'None'
+p39
+sS'__getitem__'
+p40
+S"<method-wrapper '__getitem__' of OperationalError object>"
+p41
+sS'__setstate__'
+p42
+S'<built-in method __setstate__ of OperationalError object>'
+p43
+sS'__getattribute__'
+p44
+S"<method-wrapper '__getattribute__' of OperationalError object>"
+p45
+sS'args'
+p46
+S"('no such column: auth_user.id',)"
+p47
+sS'__subclasshook__'
+p48
+S'<built-in method __subclasshook__ of type object>'
+p49
+sS'__unicode__'
+p50
+S'<built-in method __unicode__ of OperationalError object>'
+p51
+sS'__delattr__'
+p52
+S"<method-wrapper '__delattr__' of OperationalError object>"
+p53
+sS'__repr__'
+p54
+S"<method-wrapper '__repr__' of OperationalError object>"
+p55
+sS'__hash__'
+p56
+S"<method-wrapper '__hash__' of OperationalError object>"
+p57
+ssS'evalue'
+p58
+S'no such column: auth_user.id'
+p59
+sS'request'
+p60
+cgluon.html
+XML_unpickle
+p61
+(S's\xa4\xb0\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">ajax</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">application</td><td style="vertical-align:top;">:</td><td><div>COOKRE</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cid</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">controller</td><td style="vertical-align:top;">:</td><td><div>default</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_admin</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-2fadf9de-5583-44e4-a75a-1ded3f6a5c83<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_cookbookexample</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-283f40f6-b3d9-4513-83c9-048020e35702<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_cookre</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-dff13332-3429-493f-8fc6-379421e36351<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_facebookclone</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-1e1dedd6-d35c-4c1a-8a11-73463e633c74<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_facebookconnectexample</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-d4923639-4ee6-4ab8-8602-baa99bb48477<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_facebookexample</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-3846632b-54dc-4c40-8bf7-e186d32a4cb3<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_imagegallery</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-610f9db2-89b7-48de-8e04-f9a6f1e6e95e<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_imblog</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-211f8aa6-e454-42b1-b786-f34c41d76483<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_libraryservices</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-aab5c98c-3493-4226-86d4-f7d250444c4e<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_medicalsocialnetwork</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-011fd9f6-2d7e-4975-9194-6617f0e82d3f<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_posonlinestore</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-fdd76c39-9d88-4247-a1d0-dda34e55883b<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_re</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-de15535b-ab0c-49d9-84b5-85f3e90393ef<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_redditclone</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-a7f6cd43-d088-4807-aec1-040dafb0b4db<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_sqldesigner</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-f3c157e7-d535-40fb-9e8e-40a288196d89<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_uploadandsharefiles</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-62151e52-162e-4d9d-b2bc-efe2be82edb5<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_welcome</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-89de06cc-5693-4e28-ba32-b9816b5b1da6<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">env</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">CONTENT_LENGTH</td><td style="vertical-align:top;">:</td><td><div>349649</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">CONTENT_TYPE</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=----WebKitFormBoundaryyKCHl7hSLefjG7G7</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_ENCODING</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_LANGUAGE</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CACHE_CONTROL</td><td style="vertical-align:top;">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONNECTION</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONTENT_LENGTH</td><td style="vertical-align:top;">:</td><td><div>349649</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONTENT_TYPE</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=----WebKitFormBoundaryyKCHl7hSLefjG7G7</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_COOKIE</td><td style="vertical-align:top;">:</td><td><div>session_id_imblog=127.0.0.1-211f8aa6-e454-42b1-b786-f34c41d76483; session_id_imagegallery=127.0.0.1-610f9db2-89b7-48de-8e04-f9a6f1e6e95e; session_id_sqldesigner=127.0.0.1-f3c157e7-d535-40fb-9e8e-40a288196d89; session_id_redditclone=127.0.0.1-a7f6cd43-d088-4807-aec1-040dafb0b4db; session_id_posonlinestore=127.0.0.1-fdd76c39-9d88-4247-a1d0-dda34e55883b; session_id_medicalsocialnetwork=127.0.0.1-011fd9f6-2d7e-4975-9194-6617f0e82d3f; session_id_libraryservices=127.0.0.1-aab5c98c-3493-4226-86d4-f7d250444c4e; session_id_facebookconnectexample=127.0.0.1-d4923639-4ee6-4ab8-8602-baa99bb48477; session_id_facebookexample=127.0.0.1-3846632b-54dc-4c40-8bf7-e186d32a4cb3; session_id_re=127.0.0.1-de15535b-ab0c-49d9-84b5-85f3e90393ef; session_id_uploadandsharefiles=127.0.0.1-62151e52-162e-4d9d-b2bc-efe2be82edb5; session_id_facebookclone=127.0.0.1-1e1dedd6-d35c-4c1a-8a11-73463e633c74; session_id_cookbookexample=127.0.0.1-283f40f6-b3d9-4513-83c9-048020e35702; session_id_welcome=127.0.0.1-89de06cc-5693-4e28-ba32-b9816b5b1da6; session_id_admin=127.0.0.1-2fadf9de-5583-44e4-a75a-1ded3f6a5c83; session_id_cookre=127.0.0.1-dff13332-3429-493f-8fc6-379421e36351</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_HOST</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ORIGIN</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_REFERER</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/COOKRE/default/home</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_UPGRADE_INSECURE_REQUESTS</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_USER_AGENT</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/49.0.2623.87 Chrome/49.0.2623.87 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">PATH_INFO</td><td style="vertical-align:top;">:</td><td><div>/COOKRE/default/home</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">QUERY_STRING</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_ADDR</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_PORT</td><td style="vertical-align:top;">:</td><td><div>54002</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REQUEST_METHOD</td><td style="vertical-align:top;">:</td><td><div>POST</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SCRIPT_NAME</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_NAME</td><td style="vertical-align:top;">:</td><td><div>satyam-HP-450-Notebook-PC</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PORT</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PROTOCOL</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_SOFTWARE</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/satyam/itws/web2py/applications/welcome/&#x27;, &#x27;/home/satyam/itws/web2py/applications/MedicalSocialNetwork/&#x27;, &#x27;/home/satyam/itws/web2py/applications/IMBLOG/&#x27;, &#x27;/home/satyam/itws/web2py/applications/FacebookExample/&#x27;, &#x27;/home/satyam/itws/web2py/applications/FacebookClone/&#x27;, &#x27;/home/satyam/itws/web2py/applications/COOKRE/&#x27;, &#x27;/home/satyam/itws/web2py/applications/PosOnlineStore/&#x27;, &#x27;/home/satyam/itws/web2py/applications/FacebookConnectExample/&#x27;, &#x27;/home/satyam/itws/web2py/applications/SqlDesigner/&#x27;, &#x27;/home/satyam/itws/web2py/applications/re/&#x27;, &#x27;/home/satyam/itws/web2py/applications/admin/&#x27;, &#x27;/home/satyam/itws/web2py/applications/ImageGallery/&#x27;, &#x27;/home/satyam/itws/web2py/applications/LibraryServices/&#x27;, &#x27;/home/satyam/itws/web2py/applications/UploadAndShareFiles/&#x27;, &#x27;/home/satyam/itws/web2py/applications/CookbookExample/&#x27;, &#x27;/home/satyam/itws/web2py/applications/RedditClone/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/satyam/itws/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x7efe9ca47518: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;scheduler_groups&#x27;: None, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;satyam-HP-450-Notebook-PC&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;print_errors&#x27;: False, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/satyam/itws/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;&lt;ask&gt;&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">content_length</td><td style="vertical-align:top;">:</td><td><div>349649</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">content_type</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=----WebKitFormBoundaryyKCHl7hSLefjG7G7</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/satyam/itws/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_encoding</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_language</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_cache_control</td><td style="vertical-align:top;">:</td><td><div>max-age=0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_connection</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_content_length</td><td style="vertical-align:top;">:</td><td><div>349649</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_content_type</td><td style="vertical-align:top;">:</td><td><div>multipart/form-data; boundary=----WebKitFormBoundaryyKCHl7hSLefjG7G7</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_cookie</td><td style="vertical-align:top;">:</td><td><div>session_id_imblog=127.0.0.1-211f8aa6-e454-42b1-b786-f34c41d76483; session_id_imagegallery=127.0.0.1-610f9db2-89b7-48de-8e04-f9a6f1e6e95e; session_id_sqldesigner=127.0.0.1-f3c157e7-d535-40fb-9e8e-40a288196d89; session_id_redditclone=127.0.0.1-a7f6cd43-d088-4807-aec1-040dafb0b4db; session_id_posonlinestore=127.0.0.1-fdd76c39-9d88-4247-a1d0-dda34e55883b; session_id_medicalsocialnetwork=127.0.0.1-011fd9f6-2d7e-4975-9194-6617f0e82d3f; session_id_libraryservices=127.0.0.1-aab5c98c-3493-4226-86d4-f7d250444c4e; session_id_facebookconnectexample=127.0.0.1-d4923639-4ee6-4ab8-8602-baa99bb48477; session_id_facebookexample=127.0.0.1-3846632b-54dc-4c40-8bf7-e186d32a4cb3; session_id_re=127.0.0.1-de15535b-ab0c-49d9-84b5-85f3e90393ef; session_id_uploadandsharefiles=127.0.0.1-62151e52-162e-4d9d-b2bc-efe2be82edb5; session_id_facebookclone=127.0.0.1-1e1dedd6-d35c-4c1a-8a11-73463e633c74; session_id_cookbookexample=127.0.0.1-283f40f6-b3d9-4513-83c9-048020e35702; session_id_welcome=127.0.0.1-89de06cc-5693-4e28-ba32-b9816b5b1da6; session_id_admin=127.0.0.1-2fadf9de-5583-44e4-a75a-1ded3f6a5c83; session_id_cookre=127.0.0.1-dff13332-3429-493f-8fc6-379421e36351</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_host</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_origin</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_referer</td><td style="vertical-align:top;">:</td><td><div>http://127.0.0.1:8000/COOKRE/default/home</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_upgrade_insecure_requests</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_user_agent</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/49.0.2623.87 Chrome/49.0.2623.87 Safari/537.36</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>satyam-HP-450-Notebook-PC</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path_info</td><td style="vertical-align:top;">:</td><td><div>/COOKRE/default/home</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">query_string</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_addr</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_port</td><td style="vertical-align:top;">:</td><td><div>54002</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_method</td><td style="vertical-align:top;">:</td><td><div>POST</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_uri</td><td style="vertical-align:top;">:</td><td><div>/COOKRE/default/home</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">script_name</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_name</td><td style="vertical-align:top;">:</td><td><div>satyam-HP-450-Notebook-PC</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_port</td><td style="vertical-align:top;">:</td><td><div>8000</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_protocol</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_software</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_path</td><td style="vertical-align:top;">:</td><td><div>/home/satyam/itws/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.13.4-stable+timestamp.2015.12.26.04.59.39</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7efea43351e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x7efe9cae8bb0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x7efe631fa1d0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x7efea43351e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x7efe9cae8bb0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x7efe631fa1d0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">extension</td><td style="vertical-align:top;">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">folder</td><td style="vertical-align:top;">:</td><td><div>/home/satyam/itws/web2py/applications/COOKRE/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">function</td><td style="vertical-align:top;">:</td><td><div>home</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">global_settings</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/home/satyam/itws/web2py/applications/welcome/&#x27;, &#x27;/home/satyam/itws/web2py/applications/MedicalSocialNetwork/&#x27;, &#x27;/home/satyam/itws/web2py/applications/IMBLOG/&#x27;, &#x27;/home/satyam/itws/web2py/applications/FacebookExample/&#x27;, &#x27;/home/satyam/itws/web2py/applications/FacebookClone/&#x27;, &#x27;/home/satyam/itws/web2py/applications/COOKRE/&#x27;, &#x27;/home/satyam/itws/web2py/applications/PosOnlineStore/&#x27;, &#x27;/home/satyam/itws/web2py/applications/FacebookConnectExample/&#x27;, &#x27;/home/satyam/itws/web2py/applications/SqlDesigner/&#x27;, &#x27;/home/satyam/itws/web2py/applications/re/&#x27;, &#x27;/home/satyam/itws/web2py/applications/admin/&#x27;, &#x27;/home/satyam/itws/web2py/applications/ImageGallery/&#x27;, &#x27;/home/satyam/itws/web2py/applications/LibraryServices/&#x27;, &#x27;/home/satyam/itws/web2py/applications/UploadAndShareFiles/&#x27;, &#x27;/home/satyam/itws/web2py/applications/CookbookExample/&#x27;, &#x27;/home/satyam/itws/web2py/applications/RedditClone/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/home/satyam/itws/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x7efe9ca47518: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;ips&#x27;: [&#x27;127.0.1.1&#x27;], &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;scheduler_groups&#x27;: None, &#x27;port&#x27;: 8000, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;satyam-HP-450-Notebook-PC&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;print_errors&#x27;: False, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/home/satyam/itws/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;&lt;ask&gt;&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/home/satyam/itws/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>satyam-HP-450-Notebook-PC</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>127.0.1.1</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.13.4-stable+timestamp.2015.12.26.04.59.39</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_https</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_local</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_restful</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_scheduler</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_shell</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">now</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2016, 3, 26, 1, 44, 36, 292499)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_args</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_extension</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">url</td><td style="vertical-align:top;">:</td><td><div>/COOKRE/default/home</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">utcnow</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2016, 3, 25, 20, 14, 36, 292532)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi</td><td style="vertical-align:top;">:</td><td><div>&lt;gluon.main.LazyWSGI object at 0x7efe62672210&gt;</div></td></tr></table></div>'
+tRp62
+sS'frames'
+p63
+(lp64
+(dp65
+S'file'
+p66
+S'/home/satyam/itws/web2py/gluon/restricted.py'
+p67
+sS'dump'
+p68
+(dp69
+S'environment'
+p70
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'ASSIGNJS': <function ASSIGNJS>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, 'CAT': <class 'gluon.html.CAT'>, ...}"
+p71
+sS'ccode'
+p72
+S'<code object <module> at 0x7efe61653630, file "/...lications/COOKRE/controllers/default.py", line 1>'
+p73
+ssS'lnum'
+p74
+I227
+sS'lines'
+p75
+(dp76
+I224
+S'            ccode = code'
+p77
+sI225
+S'        else:'
+p78
+sI226
+S'            ccode = compile2(code, layer)'
+p79
+sI227
+S'        exec ccode in environment'
+p80
+sI228
+S'    except HTTP:'
+p81
+sI229
+S'        raise'
+p82
+sI230
+S'    except RestrictedError:'
+p83
+sI231
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p84
+sI222
+S'    try:'
+p85
+sI223
+S'        if isinstance(code, types.CodeType):'
+p86
+ssS'call'
+p87
+S'(code="def index():\\n    if auth.user: redirect(URL(\'hom....delete()\\n\\nresponse._vars=response._caller(home)\\n", environment={\'A\': <class \'gluon.html.A\'>, \'ANY_OF\': <class \'gluon.validators.ANY_OF\'>, \'ASSIGNJS\': <function ASSIGNJS>, \'Auth\': <class \'gluon.tools.Auth\'>, \'B\': <class \'gluon.html.B\'>, \'BEAUTIFY\': <class \'gluon.html.BEAUTIFY\'>, \'BODY\': <class \'gluon.html.BODY\'>, \'BR\': <class \'gluon.html.BR\'>, \'BUTTON\': <class \'gluon.html.BUTTON\'>, \'CAT\': <class \'gluon.html.CAT\'>, ...}, layer=\'/home/satyam/itws/web2py/applications/COOKRE/controllers/default.py\')'
+p88
+sS'func'
+p89
+S'restricted'
+p90
+sa(dp91
+g66
+S'/home/satyam/itws/web2py/applications/COOKRE/controllers/default.py'
+p92
+sg68
+(dp93
+sg74
+I81
+sg75
+(dp94
+I70
+S'        # accept an existing friendship request'
+p95
+sI71
+S'        db(Link.target==me)(Link.source==a1).update(accepted=True)'
+p96
+sI72
+S'        if not db(Link.source==me)(Link.target==a1).count():'
+p97
+sI73
+S'            Link.insert(source=me,target=a1)'
+p98
+sI74
+S"    elif a0=='deny':"
+p99
+sI75
+S'        # deny an existing friendship request'
+p100
+sI76
+S'        db(Link.target==me)(Link.source==a1).delete()'
+p101
+sI77
+S"    elif a0=='remove':"
+p102
+sI78
+S'        # delete a previous friendship request'
+p103
+sI79
+S'        db(Link.source==me)(Link.target==a1).delete()'
+p104
+ssg87
+S'()'
+p105
+sg89
+S'<module>'
+p106
+sa(dp107
+g66
+S'/home/satyam/itws/web2py/gluon/globals.py'
+p108
+sg68
+(dp109
+S'self'
+p110
+S'undefined'
+p111
+sS'f'
+S'<function home>'
+p112
+ssg74
+I412
+sg75
+(dp113
+I416
+S"        self.generic_patterns = ['*']"
+p114
+sI407
+S"        self.flash = ''            # used by the default view layout"
+p115
+sI408
+S'        self.meta = Storage()      # used by web2py_ajax.html'
+p116
+sI409
+S'        self.menu = []             # used by the default view layout'
+p117
+sI410
+S'        self.files = []            # used by web2py_ajax.html'
+p118
+sI411
+S'        self._vars = None'
+p119
+sI412
+S'        self._caller = lambda f: f()'
+p120
+sI413
+S'        self._view_environment = None'
+p121
+sI414
+S'        self._custom_commit = None'
+p122
+sI415
+S'        self._custom_rollback = None'
+p123
+ssg87
+S'(f=<function home>)'
+p124
+sg89
+S'<lambda>'
+p125
+sa(dp126
+g66
+S'/home/satyam/itws/web2py/gluon/tools.py'
+p127
+sg68
+(dp128
+S'action'
+p129
+S'<function home>'
+p130
+sS'a'
+S'()'
+p131
+sS'b'
+g21
+ssg74
+I4236
+sg75
+(dp132
+I4231
+S'                    flag = condition'
+p133
+sI4232
+S'                if not flag:'
+p134
+sI4233
+S'                    current.session.flash = self.messages.access_denied'
+p135
+sI4234
+S'                    return call_or_redirect('
+p136
+sI4235
+S'                        self.settings.on_failed_authorization)'
+p137
+sI4236
+S'                return action(*a, **b)'
+p138
+sI4237
+S'            f.__doc__ = action.__doc__'
+p139
+sI4238
+S'            f.__name__ = action.__name__'
+p140
+sI4239
+S'            f.__dict__.update(action.__dict__)'
+p141
+sI4240
+S'            return f'
+p142
+ssg87
+S'(*a=(), **b={})'
+p143
+sg89
+S'f'
+sa(dp144
+g66
+S'/home/satyam/itws/web2py/applications/COOKRE/controllers/default.py'
+p145
+sg68
+(dp146
+S'global request'
+p147
+S"<Storage {'_vars': None, 'function': 'home', 'co...'/home/satyam/itws/web2py/applications/COOKRE/'}>"
+p148
+sS'global session'
+p149
+S"<Storage {'_formkey[recipe/create]': ['e7af7b34-...gin]': ['86c19636-10da-4945-a1ba-e06f416a327a']}>"
+p150
+sS'form'
+p151
+S'<gluon.sqlhtml.SQLFORM object>'
+p152
+sS'form.accepts'
+p153
+S'<bound method SQLFORM.accepts of <gluon.sqlhtml.SQLFORM object>>'
+p154
+ssg74
+I21
+sg75
+(dp155
+I16
+S'@auth.requires_login()'
+p156
+sI17
+S'def home():'
+p157
+sI18
+S"    form=SQLFORM(db.recipe,fields=['title',"
+p158
+sI19
+S"                               'ingredients','directions','pictures'])"
+p159
+sI20
+S'    username=db.auth_user'
+p160
+sI21
+S'    if form.accepts(request,session):'
+p161
+sI22
+S"        redirect(URL('recipes'))"
+p162
+sI23
+S'    return dict(form=form,username=username)'
+p163
+sI24
+S''
+sI25
+S'# our wall, will show our profile and our own posts'
+p164
+ssg87
+S'()'
+p165
+sg89
+S'home'
+p166
+sa(dp167
+g66
+S'/home/satyam/itws/web2py/gluon/sqlhtml.py'
+p168
+sg68
+(dp169
+S'self.vars.id'
+p170
+S'None'
+p171
+sS'fields'
+p172
+S"{'creationTime': datetime.datetime(2016, 3, 25, 20, 14, 36, 535312), 'directions': ['weew'], 'ingredients': ['we'], 'pictures': 'recipe.pictures.8f3e67f8a37b8b7d.44756d706c696e67732d61726f756e642d7468652d776f726c642e6a7067.jpg', 'title': 'wwee', 'user2': <pydal.objects.Field object>, 'user_ref': 1L}"
+p173
+sS'self'
+p174
+S'<gluon.sqlhtml.SQLFORM object>'
+p175
+sS'self.vars'
+p176
+S"<Storage {'directions': 'weew', 'pictures': 'rec...7067.jpg', 'ingredients': 'we', 'title': 'wwee'}>"
+p177
+sS'self.table.insert'
+p178
+S'<bound method Table.insert of <Table recipe (id,...gory,ingredients,directions,src,notes,pictures)>>'
+p179
+sS'self.table'
+p180
+S'<Table recipe (id,user_ref,user2,creationTime,ti...egory,ingredients,directions,src,notes,pictures)>'
+p181
+ssg74
+I1722
+sg75
+(dp182
+I1717
+S'                    self.vars.id = self.record[self.id_field_name]'
+p183
+sI1718
+S'                    if fields:'
+p184
+sI1719
+S'                        self.table._db(self.table._id == self.record['
+p185
+sI1720
+S'                                       self.id_field_name]).update(**fields)'
+p186
+sI1721
+S'                else:'
+p187
+sI1722
+S'                    self.vars.id = self.table.insert(**fields)'
+p188
+sI1723
+S'        self.accepted = ret'
+p189
+sI1724
+S'        return ret'
+p190
+sI1725
+S''
+sI1726
+S'    AUTOTYPES = {'
+p191
+ssg87
+S"(self=<gluon.sqlhtml.SQLFORM object>, request_vars=<Storage {'title': 'wwee', 'pictures': FieldStor...492-e100eed88427', '_formname': 'recipe/create'}>, session=<Storage {'_formkey[recipe/create]': ['e7af7b34-...gin]': ['86c19636-10da-4945-a1ba-e06f416a327a']}>, formname='recipe/create', keepvalues=False, onvalidation=None, dbio=True, hideerror=False, detect_record_change=False, **kwargs={})"
+p192
+sg89
+S'accepts'
+p193
+sa(dp194
+g66
+S'/home/satyam/itws/web2py/gluon/packages/dal/pydal/objects.py'
+p195
+sg68
+(dp196
+S'self._listify'
+p197
+S'<bound method Table._listify of <Table recipe (i...gory,ingredients,directions,src,notes,pictures)>>'
+p198
+sS'fields'
+p199
+S"{'creationTime': datetime.datetime(2016, 3, 25, 20, 14, 36, 535312), 'directions': ['weew'], 'ingredients': ['we'], 'pictures': 'recipe.pictures.8f3e67f8a37b8b7d.44756d706c696e67732d61726f756e642d7468652d776f726c642e6a7067.jpg', 'title': 'wwee', 'user2': <pydal.objects.Field object>, 'user_ref': 1L}"
+p200
+sS'self'
+p201
+S'<Table recipe (id,user_ref,user2,creationTime,ti...egory,ingredients,directions,src,notes,pictures)>'
+p202
+sS'ret'
+p203
+g111
+sS'self._db._adapter'
+p204
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p205
+sS'self._db._adapter.insert'
+p206
+S'<bound method SQLiteAdapter.insert of <pydal.adapters.sqlite.SQLiteAdapter object>>'
+p207
+sS'self._db'
+p208
+S'<DAL uri="sqlite://storage.sqlite">'
+p209
+ssg74
+I731
+sg75
+(dp210
+I726
+S'    def insert(self, **fields):'
+p211
+sI727
+S'        fields = self._defaults(fields)'
+p212
+sI728
+S'        self._attempt_upload(fields)'
+p213
+sI729
+S'        if any(f(fields) for f in self._before_insert):'
+p214
+sI730
+S'            return 0'
+p215
+sI731
+S'        ret = self._db._adapter.insert(self, self._listify(fields))'
+p216
+sI732
+S'        if ret and self._after_insert:'
+p217
+sI733
+S'            fields = Row(fields)'
+p218
+sI734
+S'            [f(fields, ret) for f in self._after_insert]'
+p219
+sI735
+S'        return ret'
+p220
+ssg87
+S"(self=<Table recipe (id,user_ref,user2,creationTime,ti...egory,ingredients,directions,src,notes,pictures)>, **fields={'creationTime': datetime.datetime(2016, 3, 25, 20, 14, 36, 535312), 'directions': ['weew'], 'ingredients': ['we'], 'pictures': 'recipe.pictures.8f3e67f8a37b8b7d.44756d706c696e67732d61726f756e642d7468652d776f726c642e6a7067.jpg', 'title': 'wwee', 'user2': <pydal.objects.Field object>, 'user_ref': 1L})"
+p221
+sg89
+S'insert'
+p222
+sa(dp223
+g66
+S'/home/satyam/itws/web2py/gluon/packages/dal/pydal/adapters/base.py'
+p224
+sg68
+(dp225
+S'e'
+S"OperationalError('no such column: auth_user.id',)"
+p226
+ssg74
+I746
+sg75
+(dp227
+I741
+S'            self.execute(query)'
+p228
+sI742
+S'        except Exception:'
+p229
+sI743
+S'            e = sys.exc_info()[1]'
+p230
+sI744
+S"            if hasattr(table,'_on_insert_error'):"
+p231
+sI745
+S'                return table._on_insert_error(table,fields,e)'
+p232
+sI746
+S'            raise e'
+p233
+sI747
+S"        if hasattr(table, '_primarykey'):"
+p234
+sI748
+S'            mydict = dict([(k[0].name, k[1]) for k in fields if k[0].name in table._primarykey])'
+p235
+sI749
+S'            if mydict != {}:'
+p236
+sI750
+S'                return mydict'
+p237
+ssg87
+S"(self=<pydal.adapters.sqlite.SQLiteAdapter object>, table=<Table recipe (id,user_ref,user2,creationTime,ti...egory,ingredients,directions,src,notes,pictures)>, fields=[(<pydal.objects.Field object>, <pydal.objects.Field object>), (<pydal.objects.Field object>, ['we']), (<pydal.objects.Field object>, 'recipe.pictures.8f3e67f8a37b8b7d.44756d706c696e67732d61726f756e642d7468652d776f726c642e6a7067.jpg'), (<pydal.objects.Field object>, 'wwee'), (<pydal.objects.Field object>, datetime.datetime(2016, 3, 25, 20, 14, 36, 535312)), (<pydal.objects.Field object>, ['weew']), (<pydal.objects.Field object>, 1L)])"
+p238
+sg89
+g222
+sasS'pyver'
+p239
+S'Python 2.7.10: /usr/bin/python (prefix: /usr)'
+p240
+sS'session'
+p241
+g61
+(S's\x1f\t\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">auth</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">expiration</td><td style="vertical-align:top;">:</td><td><div>3600</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">hmac_key</td><td style="vertical-align:top;">:</td><td><div>9288c70a-417f-4984-802f-ffa6e082d3c9</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_visit</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2016, 3, 26, 1, 44, 26, 792439)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remember_me</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">user</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">email</td><td style="vertical-align:top;">:</td><td><div>satyammittalid@gmail.com</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">first_name</td><td style="vertical-align:top;">:</td><td><div>Satyam</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">id</td><td style="vertical-align:top;">:</td><td><div>1L</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">last_name</td><td style="vertical-align:top;">:</td><td><div>Mittal</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">registration_id</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">registration_key</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">reset_password_key</td><td style="vertical-align:top;">:</td><td><div>1458743319-7418ace9-988f-49eb-a692-8ee03ae6dff3</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">user_groups</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">1</td><td style="vertical-align:top;">:</td><td><div>user_1</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr></table></div>'
+tRp242
+sS'etype'
+p243
+S"<class 'pysqlite2.dbapi2.OperationalError'>"
+p244
+sS'date'
+p245
+S'Sat Mar 26 01:44:36 2016'
+p246
+sS'response'
+p247
+g61
+(S's( \x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">body</td><td style="vertical-align:top;">:</td><td><div>&lt;cStringIO.StringO object at 0x7efe618f3a78&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_cookre</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-dff13332-3429-493f-8fc6-379421e36351<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">delimiters</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">files</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">form_label_separator</td><td style="vertical-align:top;">:</td><td><div>: </div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">formstyle</td><td style="vertical-align:top;">:</td><td><div>table3cols</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generic_patterns</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">google_analytics_id</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">headers</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">X-Powered-By</td><td style="vertical-align:top;">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">logo</td><td style="vertical-align:top;">:</td><td><div><a class="navbar-brand" href="http://www.jardoshlodale.xxx/" id="web2py-logo"><b>COOKrey</b>&trade;&nbsp;</a></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">menu</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div><table><tr><td><div>Home</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/COOKRE/default/index</div></td></tr><tr><td><div><table></table></div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Home</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/COOKRE/default/home</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Wall</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/COOKRE/default/wall</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Friends</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/COOKRE/default/friends</div></td></tr></table></div></td></tr><tr><td><div><table><tr><td><div>Search</div></td></tr><tr><td><div>False</div></td></tr><tr><td><div>/COOKRE/default/search</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">meta</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">author</td><td style="vertical-align:top;">:</td><td><div>Your Name &lt;you@example.com&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">description</td><td style="vertical-align:top;">:</td><td><div>a cool new app</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generator</td><td style="vertical-align:top;">:</td><td><div>Web2py Web Framework</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">keywords</td><td style="vertical-align:top;">:</td><td><div>web2py, python, framework</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">models_to_run</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^default/\\w+\\.py$</div></td></tr><tr><td><div>^default/home/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">postprocessing</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_compression_level</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_expires</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_key</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_data_name</td><td style="vertical-align:top;">:</td><td><div>session_data_cookre</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_file</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;/home/satyam/itws/web2py/applications/COOKRE/sessions/12d/0c9/127.0.0.1-dff13332-3429-493f-8fc6-379421e36351&#x27;, mode &#x27;rb+&#x27; at 0x7efe60f05300&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_filename</td><td style="vertical-align:top;">:</td><td><div>/home/satyam/itws/web2py/applications/COOKRE/sessions/127.0.0.1-dff13332-3429-493f-8fc6-379421e36351</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_hash</td><td style="vertical-align:top;">:</td><td><div>8129482239f2dc80670c19c965f1d984</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-dff13332-3429-493f-8fc6-379421e36351</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_name</td><td style="vertical-align:top;">:</td><td><div>session_id_cookre</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_locked</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_masterapp</td><td style="vertical-align:top;">:</td><td><div>COOKRE</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_new</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_storage_type</td><td style="vertical-align:top;">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">status</td><td style="vertical-align:top;">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">subtitle</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">title</td><td style="vertical-align:top;">:</td><td><div>Cookre</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">view</td><td style="vertical-align:top;">:</td><td><div>default/home.html</div></td></tr></table></div>'
+tRp248
+sS'locals'
+p249
+(dp250
+S'fields'
+p251
+S"[(<pydal.objects.Field object>, <pydal.objects.Field object>), (<pydal.objects.Field object>, ['we']), (<pydal.objects.Field object>, 'recipe.pictures.8f3e67f8a37b8b7d.44756d706c696e67732d61726f756e642d7468652d776f726c642e6a7067.jpg'), (<pydal.objects.Field object>, 'wwee'), (<pydal.objects.Field object>, datetime.datetime(2016, 3, 25, 20, 14, 36, 535312)), (<pydal.objects.Field object>, ['weew']), (<pydal.objects.Field object>, 1L)]"
+p252
+sS'self'
+p253
+S'<pydal.adapters.sqlite.SQLiteAdapter object>'
+p254
+sS'e'
+S"OperationalError('no such column: auth_user.id',)"
+p255
+sS'table'
+p256
+S'<Table recipe (id,user_ref,user2,creationTime,ti...egory,ingredients,directions,src,notes,pictures)>'
+p257
+sS'query'
+p258
+S'"INSERT INTO recipe(user2,ingredients,pictures,ti...67.jpg\',\'wwee\',\'2016-03-25 20:14:36\',\'|weew|\',1);"'
+p259
+sssS'traceback'
+p260
+S'Traceback (most recent call last):\n  File "/home/satyam/itws/web2py/gluon/restricted.py", line 227, in restricted\n    exec ccode in environment\n  File "/home/satyam/itws/web2py/applications/COOKRE/controllers/default.py", line 81, in <module>\n  File "/home/satyam/itws/web2py/gluon/globals.py", line 412, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/satyam/itws/web2py/gluon/tools.py", line 4236, in f\n    return action(*a, **b)\n  File "/home/satyam/itws/web2py/applications/COOKRE/controllers/default.py", line 21, in home\n    if form.accepts(request,session):\n  File "/home/satyam/itws/web2py/gluon/sqlhtml.py", line 1722, in accepts\n    self.vars.id = self.table.insert(**fields)\n  File "/home/satyam/itws/web2py/gluon/packages/dal/pydal/objects.py", line 731, in insert\n    ret = self._db._adapter.insert(self, self._listify(fields))\n  File "/home/satyam/itws/web2py/gluon/packages/dal/pydal/adapters/base.py", line 746, in insert\n    raise e\nOperationalError: no such column: auth_user.id\n'
+p261
+s.

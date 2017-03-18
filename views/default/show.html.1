@@ -1,0 +1,70 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" type="text/css" href="{{=URL('static','main/show.css')}}" />
+Posted on {{=recipe.creationTime}}<br/><br/>
+<center>
+  <h1 class="recipeSource">{{=recipe.title}}</h1>
+</center>
+<input id="editRecipeButton" type="button" class="btn" value="Edit" />
+<!--<input id="uploadPictureButton" type="button" class="btn" value="Upload Picture" />-->
+<div>
+     <div class="recipeImageHolder">
+    <img class="recipeImage scalable centered"  src="{{=URL('download',args=[recipe.pictures])}}"></img>
+    </div>
+<div class="recipeNotes">
+    <h3>Notes: </h3>
+    <p>
+      {{=recipe.notes}}
+    </p>
+  </div>
+  <div class="recipeIngredients">
+    <h3>Ingredients</h3>
+    <ul>
+      {{for ingredient in recipe.ingredients:}}
+      <li>{{=ingredient}}</li>
+      {{pass}}
+    </ul>
+  </div>
+<div class="recipeDirections">
+    <h3>Directions</h3>
+    <ol>
+      {{for direction in recipe.directions:}}
+      <li>{{=direction}}</li>
+      {{pass}}
+    </ol>
+  </div>
+</div>
+<div id="editRecipe">
+  <input type="button" class="btn" id="removeAllPicture" value="Remove All Pictures" onclick="$.ajax('{{=URL('ajax','removeAllPictures', args=[recipe.id])}}').done(function(){window.location.href='';});"/>
+  <div id="editRecipeClose">X</div>
+  <center>
+    <h1>Edit Recipe</h1>
+    {{=recipeForm}}
+  </center>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".scalable").each(function(){
+      if($(this).parent().height()>$(this).parent().width()){
+        $(this).css({"width": "100%"});
+      }else{
+        $(this).css({"height": "100%"});
+      }
+    });
+    $("#Picture_recipe_ref").val("{{=recipe.id}}");
+    $("#editRecipeButton").click(function(){
+      $("#editRecipe").show();
+    });
+    $("#editRecipeClose").click(function(){
+      $("#editRecipe").hide();
+    });
+    $("#uploadPictureButton").click(function(){
+      $("#uploadPicture").show();
+    });
+    $("#uploadPictureClose").click(function(){
+      $("#uploadPicture").hide();
+    });
+    $(document).keydown(function(e){
+      if(e.which==27) $("#editRecipe").hide();
+    });
+  });
+</script>

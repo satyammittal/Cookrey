@@ -1,0 +1,65 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static','css/main/recipies.css')}}" />
+<style>td,th
+        {
+            padding: 30px;
+            text-align:left;
+            padding-right:10px;
+            margin-left:20px
+            margin-right:20px
+        }
+  thead {text-shadow: 0 0 3px #EEDD00, 0 0 5px #0000FF;
+        box-shadow: 10px 10px grey;
+    font-size:25px;}
+    .g
+    {
+         font-size:20px;
+            color:blue;
+    }
+    .o
+    {
+        font-size:15px;
+        color:blue;
+    }
+</style>
+<h1>List all recipes</h1>
+<table class="table" border=3>
+<thead class="head" >
+    <td>Recipe Name</td>
+    <td>Image</td>
+    <td>Contributor</td>
+    <td>Origin</td>
+    <td>Time</td>
+    <td>Number of likes</td>
+    <td>LIKE</td>
+</thead>
+<body>
+    {{if records:}}
+<a href="{{=URL('recipes?id=%s'%k)}}">NEXT</a>
+&nbsp&nbsp
+<a href="{{=URL('recipes?id=%s'%back)}}">BACK</a>
+    {{pass}}
+    <form><input type="hidden" id="id" name="id" value="" /></form>
+{{for recipe in records:}}
+<tr>
+<td class="g" >{{=A(recipe.title,_href=URL('show?id=%s'%recipe.id))}}</td>
+    <td><img style="width:300px; height:150px;"
+src="{{=URL('download', args=[recipe.pictures])}}" /></td>
+    <td><div class="o">{{=db.auth_user[recipe.user_ref].first_name}}</div>  </td>
+    <td>{{=recipe.Country}}</td>
+<td> {{=recipe.creationTime}}</td>
+    <td id="p1"><span id="recipe{{=recipe.id}}">{{=recipe.nolike}}</span></td>
+<td><button onclick="document.getElementById('id').value={{=recipe.id}};
+    ajax('like', ['id'], 'recipe{{=recipe.id}}')";>Like up<img src="{{=URL('static','images/like.png')}}" width="80" height="96"</img></button></td>
+</tr>
+<tr><td>
+{{pass}}
+    {{if records:}}
+<a href="{{=URL('recipes?id=%s'%k)}}">NEXT</a>
+{{pass}}    
+&nbsp&nbsp
+    {{if not id:}} 
+<a href="{{=URL('recipes?id=%s'%back)}}">BACK</a>
+   {{pass}} </body>
+</table>
+{{=A('create new recipe',_href=URL('home'))}}

@@ -1,0 +1,74 @@
+def index():
+    #f auth.user: redirect(URL('home'))
+    return locals()
+@auth.requires_membership(role='user_3')
+def manage():
+    tablename = request.args(0)
+    if tablename: 
+        grid = SQLFORM.smartgrid(db[tablename])
+    else:
+        grid = UL(*[LI(A(t,_href=URL(args=t))) for t in db.tables])
+    return locals() 
+def user():
+    return dict(form=auth())
+def like(form):
+    try:
+       db.likes.insert(auth.user_id, form)
+       new_votes=recipe.nolike+1
+       print new_votes
+       recipe.update_record(nolike=new_votes)
+    except:
+       print "YOU ALREADY LIKE THIS"
+    return 
+
+def call():
+    session.forget()
+    return service()
+
+# our home page, will show our posts and posts by friends
+@auth.requires_login()
+def home():
+    form=SQLFORM(db.recipe,fields=['title',
+                               'ingredients','directions','Country','notes','pictures'])
+    username=db.auth_user
+    if form.accepts(request,session):
+        redirect(URL('recipes'))
+    return dict(form=form,username=username)
+
+# our wall, will show our profile and our own posts
+@auth.requires_login()
+def recipes():
+    records=db(db.recipe.category==request.vars.category)\
+            .select(orderby=db.recipe.title)
+    form=SQLFORM(db.recipe,fields=['category'])
+    return dict(form=form,records=records)
+@auth.requires_login()
+def show():
+    id=request.vars.id
+    recipes=db(db.recipe.id==id).select()
+    if not len(recipes): redirect(URL('recipes'))
+    return dict(recipe=recipes[0])
+@auth.requires_login()
+def wall():
+    records=db(db.recipe.user_ref == auth.user_id).select(db.recipe.title,db.recipe.Country,db.recipe.creationTime)
+    return dict(records=records)
+# a page for searching friends and requesting friendship
+@auth.requires_login()
+def search():
+    form = SQLFORM.factory(Field('name',requires=IS_NOT_EMPTY()))
+    if form.accepts(request):
+        tokens = form.vars.name.split()
+        query = reduce(lambda a,b:a&b,
+                       [User.first_name.contains(k)|User.last_name.contains(k) \
+                            for k in tokens])
+        people = db(query).select(orderby=alphabetical)
+    else:
+        people = []
+    return locals()
+
+# a page for accepting and denying friendship requests
+@auth.requires_login()
+def friends():
+    friends = db(User.id==Link.source)(Link.target==me).select(orderby=alphabetical)
+    requests = db(User.id==Link.target)(Link.source==me).select(orderby=alphabetical)
+    return locals()
